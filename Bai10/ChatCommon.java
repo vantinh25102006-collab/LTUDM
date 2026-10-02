@@ -1,5 +1,4 @@
 package Bai10;
-
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -11,6 +10,7 @@ public class ChatCommon {
     public static final String SERVER_GROUP = "SERVER";
     public static final String SERVER_MCAST_IP = "239.1.1.1";
     public static final int SERVER_MCAST_PORT = 8000;
+    public static final int SERVER_BROADCAST_PORT = 5005;
     public static final DateTimeFormatter TIME =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
@@ -85,6 +85,19 @@ public class ChatCommon {
 
         public String displayText() {
             return "[" + time + "] " + senderName + ": " + text;
+        }
+
+        public String displayHtml() {
+            return "<html>[" + escapeHtml(time) + "] <b>" +
+                    escapeHtml(senderName) + "</b>: " + escapeHtml(text) + "</html>";
+        }
+
+        private static String escapeHtml(String s) {
+            if (s == null) return "";
+            return s.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;");
         }
     }
 }

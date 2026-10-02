@@ -1,5 +1,4 @@
 package Bai10;
-
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
@@ -17,6 +16,7 @@ public class ChatClient {
     static String myId, myName;
     static int udpPort;
     static DatagramSocket privateSocket;
+    static DatagramSocket broadcastSocket;
     static volatile boolean running = true;
 
     static final Map<String, ChatServerProxy.Client> clients = new ConcurrentHashMap<>();
@@ -58,6 +58,7 @@ public class ChatClient {
 
             new Thread(ChatClient::readServer, "TCP-Reader").start();
             new Thread(ChatClient::readPrivate, "UDP-Private").start();
+            new Thread(ChatClient::readServerBroadcast, "UDP-Server-Broadcast").start();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -221,6 +222,30 @@ public class ChatClient {
                     new Thread(r, "MCAST-" + id).start();
                 }
             }
+        }
+    }
+
+    static void readServerBroadcast() {
+        try {
+            broadcastSocket = new DatagramSocket(null);
+            broadcastSocket.setReuseAddress(true);
+            broadcastSocket.setBroadcast(true);
+            broadcastSocket.bind(new InetSocketAddress(ChatCommon.SERVER_BROADCAST_PORT));
+            byte[] buf = new byte[65535];
+            while (running) {
+                DatagramPacket p = new DatagramPacket(buf, buf.length);
+                broadcastSocket.receive(p);
+                String line = new String(p.getData(), p.getOffset(),
+                        p.getLength(), StandardCharsets.UTF_8);
+                ChatCommon.ChatMessage m = ChatCommon.ChatMessage.decode(line);
+                if (m != null && "SERVER".equals(m.scope) &&
+                        "SERVER".equals(m.groupId)) {
+                    gui.addMessage(m);
+                }
+            }
+        } catch (IOException e) {
+            if (running && gui != null)
+                gui.appendSystem("Khong nghe duoc UDP broadcast Server: " + e.getMessage());
         }
     }
 

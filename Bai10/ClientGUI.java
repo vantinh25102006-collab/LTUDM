@@ -1,5 +1,4 @@
 package Bai10;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -226,7 +225,7 @@ public class ClientGUI extends JFrame {
     void showHistory(String key) {
         chatModel.clear();
         for (ChatCommon.ChatMessage m : history.getOrDefault(key, List.of()))
-            chatModel.addElement(m.displayText());
+            chatModel.addElement(m.displayHtml());
         if (chatModel.size() > 0)
             chatList.ensureIndexIsVisible(chatModel.size()-1);
     }
@@ -245,7 +244,7 @@ public class ClientGUI extends JFrame {
 
         if (key.equals(currentKey())) {
             SwingUtilities.invokeLater(() -> {
-                chatModel.addElement(m.displayText());
+                chatModel.addElement(m.displayHtml());
                 if (chatModel.size() > 0)
                     chatList.ensureIndexIsVisible(chatModel.size()-1);
             });
@@ -419,9 +418,11 @@ public class ClientGUI extends JFrame {
 
         public Component getListCellRendererComponent(JList<? extends String> list,
                 String value, int index, boolean isSelected, boolean cellHasFocus) {
-            label.setText("<html>" + value.replace("&","&amp;")
+            label.setText(value.startsWith("<html>") ? value :
+                    "<html>" + value.replace("&","&amp;")
                     .replace("<","&lt;").replace(">","&gt;") + "</html>");
-            boolean mine = value.contains("] " + ChatClient.myName + ":");
+            boolean mine = value.contains("] " + ChatClient.myName + ":") ||
+                    value.contains("] <b>" + ChatClient.myName + "</b>:");
             label.setHorizontalAlignment(mine ? SwingConstants.RIGHT : SwingConstants.LEFT);
             setBorder(new EmptyBorder(3, 8, 3, 8));
             setBackground(isSelected ? new Color(220,235,250) : Color.WHITE);
