@@ -1,0 +1,14 @@
+[01/10/2026 22:24:48] Server: Client1 đã tham gia phòng chat.
+[01/10/2026 22:25:10] Client1: hi
+[01/10/2026 22:25:51] Server: Client2 đã tham gia phòng chat.
+[01/10/2026 22:31:41] Server: Client1 da tham gia phong chat.
+[01/10/2026 22:32:47] Server: Client2 da tham gia phong chat.
+[01/10/2026 22:32:56] Client1: hi
+[01/10/2026 22:33:33] Client2: chao cau
+[01/10/2026 22:34:14] Server: Client3 da tham gia phong chat.
+[01/10/2026 22:34:27] Client1: help
+[01/10/2026 22:34:49] Client1: msg 3 xin chao cao nha
+[01/10/2026 22:34:55] [Private] Client1 -> Client3: xin chao cao nha
+[01/10/2026 22:35:13] [Private] Client3 -> Client1: uh chao cau
+[01/10/2026 22:36:04] Server: Client1 da doi ten thanh Tinh
+[01/10/2026 22:36:15] [Private] Tinh -> Client3: xin chao
